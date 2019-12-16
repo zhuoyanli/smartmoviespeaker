@@ -181,6 +181,30 @@ class IMSTicketQuerier(IMSQuerier):
     def __init__(self, **params):
         IMSQuerier.__init__(self, domain='tickets', **params)
 
+    def ticket_by_city_cinema_movie(self, city_id=None, cinema_id=None, movie_id=None, count=None):
+        cinema_name = ""
+        cinemas = cinema_querier.cinema_by_city_id(city_id)
+        for c in cinemas:
+            if c.id == cinema_id:
+                cinema_name = c.name
+                break
+        movies = movie_querier.movie_by_cinema_id(cinema_id)
+        for m in movies:
+            if m.id == movie_id:
+                movie_name = m.title
+                break
+
+        showtime = None
+        for st in showtime_querier.showtime_by_cinema_movie_id(cinema_id, movie_id):
+            showtime = st
+            break
+        if count is None:
+            index_info = (0,1)
+        else:
+            index_info = (0, count)
+        return Ticket(cinema_name, movie_name, showtime, index_info)
+        
+        
     def ticket_by_city_cinema_movie_starttime(self, city_id=None, cinema_id=None, movie_id=None, target_start_time=None, count=None):
         cinema_name = ""
         cinemas = cinema_querier.cinema_by_city_id(city_id)

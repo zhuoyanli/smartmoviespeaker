@@ -18,6 +18,7 @@ def get_showtime():
     if not auth_parameters(**args):
         return page_unauth(**args)
 
+    cinema_matched = None
     if PARAM_CINEMA_KEYWORDS in args:
         # search by keywords
         cinema_keywords = args[PARAM_CINEMA_KEYWORDS].split(' ')
@@ -34,7 +35,9 @@ def get_showtime():
                 break
         if cinema_matched is None:
             return ""
-        
+
+    movie_matched = None
+    if PARAM_MOVIE_KEYWORDS in args:
         movie_keywords = args[PARAM_MOVIE_KEYWORDS].split(' ')
         movie_matched = None
         movies = movie_querier.movie_by_cinema_id(cinema_matched.id)
@@ -50,14 +53,19 @@ def get_showtime():
                 break
         if movie_matched is None:
             return ""
-        
-        showtimes = showtime_querier.showtime_by_cinema_movie_id(cinema_matched.id, movie_matched.id)
-        return jsonify_list(showtimes)
+
+        if cinema_matched:
+            showtimes = showtime_querier.showtime_by_cinema_movie_id(cinema_matched.id, movie_matched.id)
+            return jsonify_list(showtimes)
     
     
     if PARAM_CINEMA_ID not in args or PARAM_MOVIE_ID not in args:
         return "<html>showtimes api</html>"
-        
-    showtimes = showtime_querier.showtime_by_cinema_movie_id(args[PARAM_CINEMA_ID], args[PARAM_MOVIE_ID])
+
+    if not cinema_matched:
+        cinema_matched = args[PARAM_CINEMA_ID]
+    if not movie_matched:
+        movie_matched = args[PARAM_MOVIE_ID]
+    showtimes = showtime_querier.showtime_by_cinema_movie_id(cinema_matched, movie_matched)
     return jsonify_list(showtimes)
 
