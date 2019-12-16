@@ -27,7 +27,7 @@ def get_movie():
             if matched_count == 1 and len(cinema_name_chunks) == 1 and len(cinema_keywords) == 1:
                 cinema_matched = c
                 break
-            elif matched_count == 2:
+            elif matched_count >= 2:
                 cinema_matched = c
                 break
         if cinema_matched is None:
