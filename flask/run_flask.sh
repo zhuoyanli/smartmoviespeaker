@@ -1,3 +1,3 @@
 #!/bin/bash
 export FLASK_APP="$1"
-flask run
+flask custom_run

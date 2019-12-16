@@ -8,7 +8,9 @@ from . import config
 from .meta.city import cities, get_greater_cities
 from .meta.movie import Movie
 from .meta.cinema import Cinema
-from .meta.showtime import Showtime
+from .meta.showtime import Showtime, DateTime
+from .meta.ticket import Ticket
+from flask import json
 
 _API_KEY = "awsSBNMGASTm03bK4j1r6rFI7Yu3DAyA"
 _URL_BASE='https://api.internationalshowtimes.com/v4'
@@ -116,7 +118,6 @@ class IMSCinemaQuerier(IMSQuerier):
     def cinema_by_city_id(self, city_id=None):
         if city_id is None:
             city_id = config.DEFAULT_CITY_ID
-
         cinemas = []
         gcs = get_greater_cities(city_id)
         if gcs:
@@ -180,5 +181,29 @@ class IMSTicketQuerier(IMSQuerier):
     def __init__(self, **params):
         IMSQuerier.__init__(self, domain='tickets', **params)
 
+    def ticket_by_city_cinema_movie_starttime(self, city_id=None, cinema_id=None, movie_id=None, target_start_time=None, count=None):
+        cinema_name = ""
+        cinemas = cinema_querier.cinema_by_city_id(city_id)
+        for c in cinemas:
+            if c.id == cinema_id:
+                cinema_name = c.name
+                break
+        movies = movie_querier.movie_by_cinema_id(cinema_id)
+        for m in movies:
+            if m.id == movie_id:
+                movie_name = m.title
+                break
+        showtime = None
+        target_starttime_obj = DateTime.from_string(target_start_time)
+        for st in showtime_querier.showtime_by_cinema_movie_id(cinema_id, movie_id):
+            if target_starttime_obj > st.start_time:
+                continue
+            showtime = st
+            break
+        if count is None:
+            index_info = (0,1)
+        else:
+            index_info = (0, count)
+        return Ticket(cinema_name, movie_name, showtime, index_info)
+        
 ticket_querier = IMSTicketQuerier()
-
