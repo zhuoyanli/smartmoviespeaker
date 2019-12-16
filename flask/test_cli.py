@@ -24,10 +24,8 @@ def test_ims(*args):
     elif args.app == "cinema":
         #resp = cinema_querier.by_city()
         #for c in  cinema_querier.cinema_by_loc_dist(location=config.DEFAULT_LOCATION, distance=50):
-        #for c in cinema_querier.cinema_by_city_id("5088"):
-        #print(c)
-        cinemas = cinema_querier.cinema_by_city_id("5088")
-        print(json.dumps(cinemas, ensure_ascii=False))
+        for c in cinema_querier.cinema_by_city_id("4966"):
+            print(c)
     elif args.app == 'showtime':
         #for s in showtime_querier.showtime_by_city_movie_id("5088", "25536"):
         for s in showtime_querier.showtime_by_cinema_movie_id("48105", "25536"):

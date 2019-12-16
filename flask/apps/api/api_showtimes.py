@@ -7,6 +7,7 @@ from flask import request
 PARAM_CINEMA_ID = "cinema_id"
 PARAM_MOVIE_ID = "movie_id"
 
+
 @bp.route('/showtimes', methods=['GET'])
 def get_showtime():
     args = request.args
