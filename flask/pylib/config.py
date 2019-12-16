@@ -1,0 +1,8 @@
+# seattle
+DEFAULT_CITY_ID="4966"
+# frozen II
+DEFAULT_MOVIE_ID="25536"
+# Nuance Seattle office
+DEFAULT_LOCATION="47.6,-122.33"
+# Regal Meridian & 4DX
+DEFAULT_CINEMA_ID="48105"
